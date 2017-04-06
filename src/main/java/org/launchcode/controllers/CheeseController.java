@@ -1,5 +1,6 @@
 package org.launchcode.controllers;
 
+import org.launchcode.models.Cheese;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Sarah on 4/3/2017.
@@ -17,7 +17,8 @@ import java.util.HashMap;
 @RequestMapping("cheese")
 public class CheeseController {
 
-    static HashMap<String, String> cheeses = new HashMap<>();
+    // Store Cheese objects in ArrayList
+    static ArrayList<Cheese> cheeses = new ArrayList<>();
 
     // Request path: /cheese
     @RequestMapping(value = "")
@@ -39,7 +40,12 @@ public class CheeseController {
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processAddCheeseForm(@RequestParam String cheeseName, @RequestParam String cheeseDescription){
-        cheeses.put(cheeseName,cheeseDescription);
+
+        // Create a new Cheese object from user entered cheeseName and cheeseDescription
+        Cheese newCheese = new Cheese(cheeseName, cheeseDescription);
+
+        // Add newly created Cheese object to ArrayList
+        cheeses.add(newCheese);
 
         //Redirect to /cheese
         return "redirect:";
@@ -47,7 +53,8 @@ public class CheeseController {
 
     @RequestMapping(value = "remove", method = RequestMethod.GET)
     public String displayRemoveCheeseForm(Model model) {
-        model.addAttribute("cheeses", cheeses.keySet());
+
+        model.addAttribute("cheeses", cheeses);
         model.addAttribute("title", "Remove Cheese");
         return "cheese/remove";
     }
